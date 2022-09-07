@@ -45,6 +45,7 @@ const signInWithGoogle = async () => {
         uid: user.uid,
         authProvider: "google",
         email: user.email,
+        data: [],
       });
     }
   } catch (err) {
@@ -66,7 +67,15 @@ const logInWithEmailAndPassword = async (email: string, password: string) => {
 
 const registerWithEmailAndPassword = async (
   email: string,
-  password: string
+  password: string,
+  data: {
+    "id": number,
+  "title": string,
+  "completed"?: boolean,
+  "createdAt"?: string,
+  "remindAt"?: string,
+}[]
+  ,
 ) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -75,6 +84,7 @@ const registerWithEmailAndPassword = async (
       uid: user.uid,
       authProvider: "local",
       email,
+      data,
     });
   } catch (err) {
     console.error(err);

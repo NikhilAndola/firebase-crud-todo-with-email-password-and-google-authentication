@@ -34,7 +34,7 @@ export interface IfetchTodo {
 export const fetchTodosData = createAsyncThunk(
     "todosList/data",
     async (dispatch, action) => {
-        const response = await fetch("https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10")
+        const response = await fetch("https://jsonplaceholder.typicode.com/posts?_page=1&_limit=5")
         let res = await response.json()
         return res;
     }

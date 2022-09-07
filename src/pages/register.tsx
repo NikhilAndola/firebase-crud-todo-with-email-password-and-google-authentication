@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAppSelector } from "../app/hooks/hooks";
 import {
   auth,
   registerWithEmailAndPassword,
@@ -11,17 +12,20 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [user, loading, error] = useAuthState(auth);
+  const initialTodoForFirebase = useAppSelector(state => state.todosData.todosDataFirebase)
+
   const navigate = useNavigate();
   const register = () => {
     if (password !== confirmPass) {
       alert("Password must be same");
     } else {
-      registerWithEmailAndPassword(email, password);
+      registerWithEmailAndPassword(email, password, initialTodoForFirebase);
     }
   };
   useEffect(() => {
     if (loading) return;
-    if (user) navigate("success", { replace: true });
+    // if (user) navigate("dashboard", { replace: true });
+    if (user) navigate("/dashboard");
     // history.replace("/dashboard");
   }, [user, loading]);
   return (

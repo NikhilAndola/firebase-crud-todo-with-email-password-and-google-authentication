@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { useAppSelector, useAppDispatch } from './app/hooks/hooks';
@@ -9,6 +9,8 @@ import Register from './pages/register';
 import Reset from './pages/Reset';
 import Dashboard from './pages/Dashboard';
 import { Todos } from './pages/Todos';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './controls/firebase';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -19,10 +21,10 @@ function App() {
   const count = useAppSelector((state) => state.todosData.count)
 
   let TodoFirstdata = useAppSelector(state => state.todosData.value);
-  console.log("🚀 ~ file: Dashboard.tsx ~ line 30 ~ Dashboard ~ TodoFirstdata", TodoFirstdata)
+  // console.log("🚀 ~ file: Dashboard.tsx ~ line 30 ~ Dashboard ~ TodoFirstdata", TodoFirstdata)
 
   let iteratedTodo = TodoFirstdata.map(({body, userId, ...rest}) => ({...rest, createdAt:"",completed:false,remindAt:"" }))
-  console.log("🚀 ~ file: Dashboard.tsx ~ line 36 ~ iteratedTodo ~ iteratedTodo", iteratedTodo)
+  // console.log("🚀 ~ file: Dashboard.tsx ~ line 36 ~ iteratedTodo ~ iteratedTodo", iteratedTodo)
 
   if(TodoFirstdata.length > 0) {
     dispatch(InitialTodoForFirebase(iteratedTodo))
