@@ -44,3 +44,17 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+//Changing object keys
+
+let x = [{
+  name: "nikhil",
+  age: 15
+}]
+
+console.log(x)
+
+let m = x.map(({name, age})=> {
+              return {mango: name, rollNo: age}
+            })
+console.log(m)
