@@ -21,7 +21,7 @@ function Dashboard() {
     try {
       const q = query(collection(db, "users"), where("uid", "==", user?.uid));
       const docs = await getDocs(q);
-      console.log("🚀 **************************** ~ users", docs.docs[0].id)
+      // console.log("🚀 **************************** ~ users", docs.docs[0].id)
       dispatch(setSecretId(docs.docs[0].id))  
       const data = docs.docs[0].data();  
       setEmail(data.email);
@@ -42,7 +42,7 @@ function Dashboard() {
     }
   };
 
-  console.log("🚀 ~ file: Dashboard.tsx ~ line 43 ~ fetchUser ~ usersData", usersData)
+  // console.log("🚀 ~ file: Dashboard.tsx ~ line 43 ~ fetchUser ~ usersData", usersData)
 
   useEffect(() => {
     if (loading) return;

@@ -33,14 +33,6 @@ export function NewTodo() {
     fetchUser();
   }, [user, loading]);
 
-//   useEffect(() => {
-//     if (loading) {
-//       // maybe trigger a loading screen
-//       return;
-//     }
-//     if (user) navigate("/dashboard");
-//   }, [user, loading]);
-
 const handleAddNewTodo = async () => {
     const userRefAddNew = doc(db, 'users', secretId);
     const newDataToAdd = {
@@ -51,7 +43,7 @@ const handleAddNewTodo = async () => {
         title: title,
     }
     const updatedDataTodo = [...preData.data, {...newDataToAdd}]
-    console.log("adding data", title, new Date(remindAt).toISOString() )
+    // console.log("adding data", title, new Date(remindAt).toISOString() )
     // if (user) navigate("/dashboard");
     await updateDoc(userRefAddNew, {
       data: updatedDataTodo,

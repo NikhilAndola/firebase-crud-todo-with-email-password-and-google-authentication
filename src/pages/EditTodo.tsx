@@ -51,7 +51,7 @@ export const EditTodo = () => {
         })
         // let itemToUpdate = preData.data.filter((item: any) => item.id === DataToEdit.id)
         const finalDataToUpdate = [...preData.data, {...updatedEditTodo}]
-        console.log("************************", updatedEditTodo )
+        // console.log("************************", updatedEditTodo )
         await updateDoc(userRefAddNew, {
           data: updatedEditTodo,
         });

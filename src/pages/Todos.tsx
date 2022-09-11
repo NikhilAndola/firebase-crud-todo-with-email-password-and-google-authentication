@@ -13,7 +13,7 @@ export const Todos: React.FC<any> = ({usersData}) => {
     let iteratedTodos = useAppSelector(state => state.todosData.todosDataFirebase);
 
     const secretId = useAppSelector((state) => state.todosData.secretUserId)
-    const [count, setCount ] = React.useState(0)
+    const [data, setData ] = React.useState(usersData.data)
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -47,7 +47,7 @@ export const Todos: React.FC<any> = ({usersData}) => {
       })
       // let itemToUpdate = preData.data.filter((item: any) => item.id === DataToEdit.id)
       const finalDataToUpdate = [...usersData.data, {...updatedEditTodo}]
-      console.log("************************", updatedEditTodo )
+      // console.log("************************", updatedEditTodo )
       await updateDoc(userRefAddNew, {
         data: updatedEditTodo,
       });
@@ -64,17 +64,27 @@ export const Todos: React.FC<any> = ({usersData}) => {
 
     const handleDelete = async (id: any) => {
         const userRefDelete = doc(db, 'users', secretId);
-        console.log(userRefDelete) 
+        // console.log(userRefDelete) 
         const dataUpdatedAfterDelete = await usersData.data.filter((item: any) => item.id !== id)
-        console.log("id", id, dataUpdatedAfterDelete)
+        // console.log("id", id, dataUpdatedAfterDelete)
         await updateDoc(userRefDelete, {
           data: dataUpdatedAfterDelete,
         });
-        setCount(count + 1)
         window.location.reload();
     }
     
-    console.log("🚀 ~ file: Todos.tsx ~ line 13 ~ handleChange ~ filteredTodo", usersData)
+    // console.log("🚀 ~ file: Todos.tsx ~ line 13 ~ handleChange ~ filteredTodo", usersData)
+
+    const handleSort = async () => {
+      let sortedData = data.sort((item: any)=> {
+        if(item.completed){
+          return -1;
+        }else return 1;
+
+      })
+      // console.log("sort button", sortedData)
+      setData(sortedData);
+    }
 
   return (
     <div className="h-screen w-screen ">
@@ -83,9 +93,16 @@ export const Todos: React.FC<any> = ({usersData}) => {
         <button onClick={()=> navigate("/newTodo")} className="p-[10px] text-xl rounded-[8px] bg-[rgb(162,85,190)]">
           New Todo
         </button>
-        <div className="self-start text-[18px]">Sort by:</div>
+        <div className="self-start text-[18px]">Sort by:
+        <button className="p-[10px] text-xl rounded-[8px] bg-[rgb(0,255,85)]" disabled onClick={()=> handleSort()}>Complete status</button>
+        </div>
       </div>
-      {usersData.data.map((item: any, index: number) => (
+      {data.sort((item: any)=> {
+        if(item.completed){
+          return -1;
+        }else return 1;
+
+      }).map((item: any, index: number) => (
         <div
           key={item.id}
           className={`w-full px-10 h-[60px] ${item.completed === false ? "bg-[red]" : "bg-[green]"} flex justify-between items-center my-5`}>
@@ -108,6 +125,9 @@ export const Todos: React.FC<any> = ({usersData}) => {
           </div>
         </div>
       ))}
+
+
+
     </div>
   );
 };
