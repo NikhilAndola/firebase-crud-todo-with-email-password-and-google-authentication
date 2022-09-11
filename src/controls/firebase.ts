@@ -70,10 +70,10 @@ const registerWithEmailAndPassword = async (
   password: string,
   data: {
     "id": number,
-  "title": string,
-  "completed"?: boolean,
-  "createdAt"?: string,
-  "remindAt"?: string,
+    "title": string,
+    "completed"?: boolean,
+    "createdAt"?: string,
+    "remindAt"?: string,
 }[]
   ,
 ) => {

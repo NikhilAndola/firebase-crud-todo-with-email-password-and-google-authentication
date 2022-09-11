@@ -2,33 +2,34 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db, logout } from "../controls/firebase";
-import { query, collection, getDocs, where, addDoc, updateDoc, doc } from "firebase/firestore";
+import { query, collection, getDocs, where, addDoc, deleteDoc, updateDoc, getDoc, doc, setDoc, DocumentData } from "firebase/firestore";
 import { Todos } from "./Todos";
 import { useAppSelector, useAppDispatch } from "../app/hooks/hooks";
 import { InitialTodoForFirebase } from "../features/todosSlice";
+
 function Dashboard() {
-  // const [users, setUsers] = useState<any[]>([])
+  const [usersData, setUsersData] = useState<any>(null)
   // console.log("🚀 ~ file: Dashboard.tsx ~ line 11 ~ Dashboard ~ users", users)
   // const initialTodoForFirebase = useAppSelector(state => state.todosData.todosDataFirebase)
   const [user, loading, error] = useAuthState(auth);
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+
   const fetchUser = async () => {
     try {
       const q = query(collection(db, "users"), where("uid", "==", user?.uid));
       const docs = await getDocs(q);
       const data = docs.docs[0].data();
       setEmail(data.email);
-      
+      setUsersData(data);
       // const userCollectionsRef = collection(db, "users")
-      // const userDoc = doc(db, "users", user?.uid)
+      // const userDoc =  getDoc,doc(db, "users", user?.uid) 
       // const newFields = {data: initialTodoForFirebase}
-      // console.log("🚀 ~ file: Dashboard.tsx ~ line 26 ~ fetchUser ~ userDoc", userDoc)
 
       // if(data.data.length === 0) {
         // await addDoc(userCollectionsRef, {data: initialTodoForFirebase})
         
-        // await updateDoc(userDoc, {data: initialTodoForFirebase})
+        // await updateDoc(userDoc, {data: InitialTodoForFirebase})
         // await updateDoc(docs, newFields)
       // }
     } catch (err) {
@@ -36,22 +37,56 @@ function Dashboard() {
       alert("An error occured while fetching user data");
     }
   };
+
+  console.log("🚀 ~ file: Dashboard.tsx ~ line 43 ~ fetchUser ~ usersData", usersData)
+
   useEffect(() => {
     if (loading) return;
     if (!user) return navigate("/");
     fetchUser();
   }, [user, loading]);
 
+  // const userCollectionsRef = collection(db, "users")
+
+  // useEffect(() => {
+  //   const dbFetch = async () => {
+  //     const data = await getDocs(userCollectionsRef)
+  //     // setUsersData(data.map(( getDoc,doc:any) =>  getDoc,doc.data()))
+  //     setUsersData(data.docs.map((doc) => ({...doc.data(), id: doc.id })));
+  //   }
+  //   dbFetch();
+  // },[])
+  
   // const [users, setUsers] = useState([]);
   // const usersCollectionRef = collection(db, "users")
   // useEffect(() => {
-  //   const getUsers = async () => {
+    //   const getUsers = async () => {
   //     const data = await getDocs(usersCollectionRef)
-  //     setUsers(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+  //     setUsers(data.docs.map(( getDoc,doc) => ({... getDoc,doc.data(), id: doc.id})));
   //     console.log('db data', data)
   //   }
   //   getUsers();
   // }, [])
+  // console.log("data of user", user)
+  
+//   useEffect(()=> {
+    
+//     const getData = async () => {
+
+//       const docRef = doc(db, "users", "u4GqGqCSCOUCSneUIBlf");
+//       const docSnap = await getDoc(docRef);
+      
+//       if (docSnap.exists()) {
+//         console.log("Document data:", docSnap.data());
+//       } else {
+//   // doc.data() will be undefined in this case
+//   console.log("No such document!");
+// }
+// }
+// getData();
+//   }, [])
+
+  // console.log("am db", db)
 
   return (
     <div>
@@ -65,7 +100,10 @@ function Dashboard() {
        </div>
      </div>
        <div>
-       <Todos/>
+        {
+          usersData &&
+          <Todos usersData={usersData}/>
+        }
        </div>
        </div>
   );

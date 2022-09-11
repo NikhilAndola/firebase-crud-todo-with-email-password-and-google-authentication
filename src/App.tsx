@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import { Todos } from './pages/Todos';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './controls/firebase';
+import { NewTodo } from './pages/NewTodo';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -38,6 +39,7 @@ function App() {
       <Route path="/register" element={<Register/>} />
       <Route path="/reset" element={<Reset/>} />
       <Route path="/dashboard" element={<Dashboard/>} />
+      <Route path="/newTodo" element={<NewTodo/>} />
     </Routes>
   </Router>
 </div>
