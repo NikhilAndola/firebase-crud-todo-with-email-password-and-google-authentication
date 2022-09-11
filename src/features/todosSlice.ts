@@ -22,6 +22,14 @@ export interface IfetchTodo {
         "body"?: string,
         "userId"?: number,
     }[];
+    currentFieldId: {
+        "id": number,
+        "title": string,
+        "completed": boolean,
+        "createdAt": string,
+        "remindAt": string,
+    },
+    secretUserId: string,
   }
 
   const initialState: IfetchTodo = {
@@ -29,6 +37,14 @@ export interface IfetchTodo {
     value: [],
     count: 0,
     todosDataFirebase: [],
+    currentFieldId: {
+        "id": 0,
+        "title": '',
+        "remindAt": '',
+        "createdAt": '',
+        "completed": false,
+    },
+    secretUserId:"",
 };
 
 export const fetchTodosData = createAsyncThunk(
@@ -55,6 +71,12 @@ export const todoSlice = createSlice({
         },
         handleCheckState: (state, {payload}) => {
             state.todosDataFirebase = payload;
+        },
+        userCurrentField: (state, {payload}) => {
+            state.currentFieldId = payload;
+        },
+        setSecretId: (state, {payload}) => {
+            state.secretUserId = payload;
         }
     },
     extraReducers: (builder) => {
@@ -72,6 +94,6 @@ export const todoSlice = createSlice({
     },
 })
 
-export const { add, InitialTodoForFirebase, handleCheckState } = todoSlice.actions;
+export const { add, InitialTodoForFirebase, handleCheckState, userCurrentField, setSecretId } = todoSlice.actions;
 
 export default todoSlice.reducer;

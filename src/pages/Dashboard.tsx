@@ -5,21 +5,25 @@ import { auth, db, logout } from "../controls/firebase";
 import { query, collection, getDocs, where, addDoc, deleteDoc, updateDoc, getDoc, doc, setDoc, DocumentData } from "firebase/firestore";
 import { Todos } from "./Todos";
 import { useAppSelector, useAppDispatch } from "../app/hooks/hooks";
-import { InitialTodoForFirebase } from "../features/todosSlice";
+import { InitialTodoForFirebase, setSecretId } from "../features/todosSlice";
+import { useDispatch } from "react-redux";
 
 function Dashboard() {
   const [usersData, setUsersData] = useState<any>(null)
-  // console.log("🚀 ~ file: Dashboard.tsx ~ line 11 ~ Dashboard ~ users", users)
   // const initialTodoForFirebase = useAppSelector(state => state.todosData.todosDataFirebase)
   const [user, loading, error] = useAuthState(auth);
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+
 
   const fetchUser = async () => {
     try {
       const q = query(collection(db, "users"), where("uid", "==", user?.uid));
       const docs = await getDocs(q);
-      const data = docs.docs[0].data();
+      console.log("🚀 **************************** ~ users", docs.docs[0].id)
+      dispatch(setSecretId(docs.docs[0].id))  
+      const data = docs.docs[0].data();  
       setEmail(data.email);
       setUsersData(data);
       // const userCollectionsRef = collection(db, "users")

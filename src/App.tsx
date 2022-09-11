@@ -12,6 +12,7 @@ import { Todos } from './pages/Todos';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './controls/firebase';
 import { NewTodo } from './pages/NewTodo';
+import { EditTodo } from './pages/EditTodo';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -40,6 +41,7 @@ function App() {
       <Route path="/reset" element={<Reset/>} />
       <Route path="/dashboard" element={<Dashboard/>} />
       <Route path="/newTodo" element={<NewTodo/>} />
+      <Route path="/EditTodo" element={<EditTodo/>} />
     </Routes>
   </Router>
 </div>

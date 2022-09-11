@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks/hooks";
 import { RootState } from "../app/store/store";
-import { handleCheckState } from "../features/todosSlice";
+import { handleCheckState, userCurrentField } from "../features/todosSlice";
 import DeleteIcon from "../icons/DeleteIcon";
 import EditIcon from "../icons/EditIcon";
 import { useNavigate } from "react-router-dom";
@@ -11,8 +11,10 @@ import { query, collection, getDocs, where, addDoc, deleteDoc, updateDoc, delete
 export const Todos: React.FC<any> = ({usersData}) => {
 
     let iteratedTodos = useAppSelector(state => state.todosData.todosDataFirebase);
+
+    const secretId = useAppSelector((state) => state.todosData.secretUserId)
     const [count, setCount ] = React.useState(0)
-    
+
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -25,23 +27,51 @@ export const Todos: React.FC<any> = ({usersData}) => {
     //     dispatch(handleCheckState(filteredTodo))
     //   }
 
-    const handleChange = () => {
+    // const handleChange = (id: number) => {
 
+    // }
+
+    const handleChange = async (id: number) => {
+      const userRefAddNew = doc(db, 'users', secretId);
+
+      const updatedEditTodo =  usersData.data.map((item:any) => {
+          if(item.id === id){
+              return {
+                  completed: !item.completed,
+                  createdAt: item.createdAt,
+                  id: item.id,
+                  remindAt: item.remindAt,
+                  title: item.title,
+              }
+          } else return item;
+      })
+      // let itemToUpdate = preData.data.filter((item: any) => item.id === DataToEdit.id)
+      const finalDataToUpdate = [...usersData.data, {...updatedEditTodo}]
+      console.log("************************", updatedEditTodo )
+      await updateDoc(userRefAddNew, {
+        data: updatedEditTodo,
+      });
+      navigate("/dashboard")
+      window.location.reload();
+
+  }
+
+    const handleEdit = (id: number) => {
+      const dataUpdatedAfterEdit =  usersData.data.filter((item: any) => item.id === id)
+      dispatch(userCurrentField(dataUpdatedAfterEdit[0]))
+      navigate("/EditTodo")
     }
 
     const handleDelete = async (id: any) => {
-        const userRefDelete = doc(db, 'users', "u4GqGqCSCOUCSneUIBlf");
+        const userRefDelete = doc(db, 'users', secretId);
         console.log(userRefDelete) 
-        // Remove the 'capital' field from the document
-        // await updateDoc(userRefDelete, {
-        //     capital: deleteField()
-        // });
         const dataUpdatedAfterDelete = await usersData.data.filter((item: any) => item.id !== id)
         console.log("id", id, dataUpdatedAfterDelete)
         await updateDoc(userRefDelete, {
           data: dataUpdatedAfterDelete,
         });
         setCount(count + 1)
+        window.location.reload();
     }
     
     console.log("🚀 ~ file: Todos.tsx ~ line 13 ~ handleChange ~ filteredTodo", usersData)
@@ -66,15 +96,15 @@ export const Todos: React.FC<any> = ({usersData}) => {
             </label>
             <input
               type="checkbox"
-              className="w-5 h-5"
+              className="w-5 h-5 cursor-pointer"
               id="vehicle2"
               checked={item.completed}
-              onChange={()=>handleChange()}
+              onChange={()=>handleChange(item.id)}
               name="vehicle2"
               value="Car"
             />
-            <EditIcon height="50px" width="30px" />
-            <DeleteIcon height="50px" width="30px" onClick={()=> handleDelete(item.id)}/>
+            <EditIcon onClick={()=>handleEdit(item.id)} className="cursor-pointer" height="50px" width="30px" />
+            <DeleteIcon className="cursor-pointer" height="50px" width="30px" onClick={()=> handleDelete(item.id)}/>
           </div>
         </div>
       ))}

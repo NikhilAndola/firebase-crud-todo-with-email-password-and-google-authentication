@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, logout } from "../controls/firebase";
 import { query, collection, getDocs, where, addDoc, deleteDoc, updateDoc, deleteField, getDoc, doc, setDoc, DocumentData } from "firebase/firestore";
+import { useAppSelector } from "../app/hooks/hooks";
 
 export function NewTodo() {
   const [title, setTitle] = useState("");
   const [remindAt, setRemindAt] = useState("");
   const [preData, setPreData] = useState<any>(null);
+  const secretId = useAppSelector((state) => state.todosData.secretUserId)
 
   const rid = React.useId();
   const [user, loading, error] = useAuthState(auth);
@@ -40,12 +42,12 @@ export function NewTodo() {
 //   }, [user, loading]);
 
 const handleAddNewTodo = async () => {
-    const userRefAddNew = doc(db, 'users', "u4GqGqCSCOUCSneUIBlf");
+    const userRefAddNew = doc(db, 'users', secretId);
     const newDataToAdd = {
         completed: false,
-        createdAt: new Date(remindAt).toISOString(),
+        createdAt: new Date().toISOString(),
         id: Date.now(),
-        remindAt: remindAt,
+        remindAt: new Date(remindAt).toISOString(),
         title: title,
     }
     const updatedDataTodo = [...preData.data, {...newDataToAdd}]
